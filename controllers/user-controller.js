@@ -2,7 +2,7 @@ const userService = require("../service/user-service");
 
 class UserController {
   async reg(req, res, next) {
-    const { email, password } = req.body.data;
+    const { email, password } = req.body;
     try {
       await userService.reg(email, password);
       res.json("Succes reg");
@@ -13,7 +13,7 @@ class UserController {
 
   async signin(req, res, next) {
     try {
-      const { email, password } = req.body.data;
+      const { email, password } = req.body;
       await userService.signin(email, password);
       res.json("Succes signin");
     } catch (error) {
