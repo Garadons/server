@@ -2,9 +2,9 @@ const userService = require("../service/user-service");
 
 class UserController {
   async reg(req, res, next) {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     try {
-      await userService.reg(email, password);
+      await userService.reg(name, email, password);
       res.json("Succes reg");
     } catch (error) {
       res.status(500).json(error.message);

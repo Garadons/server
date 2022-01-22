@@ -2,12 +2,25 @@ const {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } = require("firebase/auth");
+const usersRef = require("../config/firebase-admin-config");
 const auth = require("../config/firebase-config");
 
 class UserService {
-  async reg(email, password) {
+  async reg(name, email, password) {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const responce = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const uid = responce.user.uid;
+      const data = {
+        id: uid,
+        name: name,
+        email: email,
+      };
+
+      usersRef.doc(data.id.toString()).set(data);
     } catch (error) {
       throw new Error(error);
     }

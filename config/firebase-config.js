@@ -2,13 +2,13 @@ const { initializeApp } = require("firebase/app");
 const { getAuth } = require("firebase/auth");
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC-RtO4eD6cNN5XkOcLigY9joGsPJq_Yxs",
-  authDomain: "authentication-ff20d.firebaseapp.com",
-  projectId: "authentication-ff20d",
-  storageBucket: "authentication-ff20d.appspot.com",
-  messagingSenderId: "807062522568",
-  appId: "1:807062522568:web:4cb30d981a2572348533fd",
-  measurementId: "G-2XP4VG2KZ5",
+  apiKey: "AIzaSyDmniPsj_s_y-siPZcj_3vXaUlAbpZoOPA",
+  authDomain: "todomenager.firebaseapp.com",
+  projectId: "todomenager",
+  storageBucket: "todomenager.appspot.com",
+  messagingSenderId: "568789487705",
+  appId: "1:568789487705:web:9a4230092c38018ae96148",
+  measurementId: "G-KQ1JTLY5J1",
 };
 
 const app = initializeApp(firebaseConfig);
