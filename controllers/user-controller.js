@@ -4,8 +4,8 @@ class UserController {
   async reg(req, res, next) {
     const { name, email, password } = req.body;
     try {
-      await userService.reg(name, email, password);
-      res.json("Succes reg");
+      const token = await userService.reg(name, email, password);
+      res.json(token);
     } catch (error) {
       res.status(500).json(error.message);
     }
@@ -14,8 +14,8 @@ class UserController {
   async signin(req, res, next) {
     try {
       const { email, password } = req.body;
-      await userService.signin(email, password);
-      res.json("Succes signin");
+      const token = await userService.signin(email, password);
+      res.json(token);
     } catch (error) {
       res.status(500).json(error.message);
     }
