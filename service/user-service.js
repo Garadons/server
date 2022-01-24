@@ -15,20 +15,20 @@ class UserService {
         email,
         password
       );
-
-      const token = this.generateToken();
-
       const uid = responce.user.uid;
+
+      const token = this.generateToken({ uid });
+
       const data = {
-        id: uid,
-        name: name,
-        email: email,
-        accessToken: token.accessToken,
+        uid,
+        name,
+        email,
+        token,
       };
 
-      usersRef.doc(data.id.toString()).set(data);
+      await usersRef.doc(data.uid.toString()).set(data);
 
-      return token;
+      return { token };
     } catch (error) {
       throw new Error(error);
     }
@@ -39,11 +39,11 @@ class UserService {
       const responce = await signInWithEmailAndPassword(auth, email, password);
 
       const uid = responce.user.uid;
-      const token = this.generateToken();
+      const token = this.generateToken({ uid });
 
-      usersRef.doc(uid).update("accessToken", token.accessToken);
+      await usersRef.doc(uid).update("accessToken", token);
 
-      return token;
+      return { token };
     } catch (error) {
       throw new Error(error);
     }
@@ -51,17 +51,55 @@ class UserService {
 
   async logout(refreshToken) {}
 
-  generateToken() {
-    const accessToken = jwt.sign({}, process.env.SECRET_ACCESS_KEY, {
-      expiresIn: "10s",
+  async gettasks(token) {
+    try {
+      const userData = this.validateToken(token);
+
+      if (!userData) {
+        throw new Error("Устаревший токен");
+      }
+
+      const { uid } = userData;
+
+      const doc = await usersRef.doc(uid).get();
+      const { todo: tasks } = doc.data();
+
+      return tasks;
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  async settasks(token, tasks) {
+    try {
+      const userData = this.validateToken(token);
+
+      if (!userData) {
+        throw new Error("Устаревший токен");
+      }
+      const { uid } = userData;
+
+      await usersRef.doc(uid).update("todo", tasks);
+    } catch (error) {
+      throw new Error(error);
+    }
+  }
+
+  generateToken(payload) {
+    const accessToken = jwt.sign(payload, process.env.SECRET_ACCESS_KEY, {
+      expiresIn: "1h",
     });
-    // const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
-    //   expiresIn: "30s",
-    // });
-    return {
-      accessToken,
-      //   refreshToken,
-    };
+
+    return accessToken;
+  }
+
+  validateToken(token) {
+    try {
+      const userData = jwt.verify(token, process.env.SECRET_ACCESS_KEY);
+      return userData;
+    } catch (e) {
+      return null;
+    }
   }
 }
 

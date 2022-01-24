@@ -27,6 +27,25 @@ class UserController {
       next(e);
     }
   }
+
+  async gettasks(req, res, next) {
+    try {
+      const { token } = req.body;
+      const tasks = await userService.gettasks(token);
+      res.json(tasks);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
+
+  async settasks(req, res, next) {
+    try {
+      const { token, tasks } = req.body;
+      await userService.settasks(token, tasks);
+    } catch (error) {
+      res.status(500).json(error.message);
+    }
+  }
 }
 
 module.exports = new UserController();
