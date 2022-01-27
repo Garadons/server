@@ -32,6 +32,7 @@ class UserController {
     try {
       const { token } = req.body;
       const tasks = await userService.gettasks(token);
+
       res.json(tasks);
     } catch (error) {
       res.status(500).json(error.message);

@@ -62,9 +62,13 @@ class UserService {
       const { uid } = userData;
 
       const doc = await usersRef.doc(uid).get();
-      const { todo: tasks } = doc.data();
+      let { todo } = doc.data();
 
-      return tasks;
+      if (!todo) {
+        todo = [];
+      }
+
+      return todo;
     } catch (error) {
       throw new Error(error);
     }
@@ -87,7 +91,7 @@ class UserService {
 
   generateToken(payload) {
     const accessToken = jwt.sign(payload, process.env.SECRET_ACCESS_KEY, {
-      expiresIn: "1h",
+      expiresIn: "1d",
     });
 
     return accessToken;
